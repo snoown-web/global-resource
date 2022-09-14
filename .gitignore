@@ -3,3 +3,7 @@ node_modules/
 
 # JavaScript
 *.js
+
+# CSS
+*.css
+*.css.map

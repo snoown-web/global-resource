@@ -1,4 +1,7 @@
 {
   "name": "global-resource",
-  "type": "module"
+  "type": "module",
+  "devDependencies": {
+    "typescript": "^4.8.3"
+  }
 }

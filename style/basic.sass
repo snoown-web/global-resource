@@ -1,0 +1,84 @@
+@use 'variable'
+
+*
+  padding: 0
+  margin: 0
+
+button, input, select, textarea
+  font-family: inherit
+  font-size: inherit
+  color: inherit
+
+a
+  text-decoration: none
+  color: inherit
+
+button
+  padding: 1ch 1.6ch
+  border: 1px solid variable.$accent-color
+  border-radius: calc(1ch + 1px)
+  background-color: variable.$accent-color
+
+  color: variable.$base-color
+  transition: variable.$transition
+
+button:hover
+  background-color: transparent
+  color: variable.$accent-color
+
+input
+  border: none
+  background-color: transparent
+
+input:focus
+  outline: none
+
+input.warning
+  color: variable.$warning-color !important
+
+body
+  display: flex
+  flex-direction: column
+  min-height: 100vh
+
+  font-family: sans-serif
+  color: variable.$char-color
+
+  > header
+    display: flex
+    justify-content: space-between
+    height: 1.8rem
+    padding: 1.2rem
+    background-color: variable.$main-color
+
+    svg
+      height: 1.8rem
+      aspect-ratio: 1
+      stroke: variable.$base-color
+
+  > main
+    flex-grow: 1
+    padding: 2.6rem
+    background-color: variable.$base-color
+
+  > footer
+    display: flex
+    flex-direction: column
+    height: 4.5rem
+    padding: 1.2rem
+    background-color: variable.$main-color
+
+    font-size: 0.62rem
+    color: variable.$base-color
+
+    svg
+      height: 1em
+      aspect-ratio: 1
+      stroke: variable.$base-color
+
+    > div
+      flex-grow: 1
+      display: flex
+      justify-content: flex-end
+      align-items: center
+      gap: 2.6ch

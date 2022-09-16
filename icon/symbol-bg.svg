@@ -1,0 +1,29 @@
+<svg xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink' viewBox='-809 -809 1618 1618'>
+  <defs>
+    <symbol id='snow' viewBox='-118 -118 236 236'>
+      <g id='base-snow' stroke-width='36'>
+        <line id='fragment' x1='0' y1='0' x2='0' y2='118'/>
+        <use xlink:href='#fragment' transform='rotate(60)'/>
+        <use xlink:href='#fragment' transform='rotate(120)'/>
+        <use xlink:href='#fragment' transform='rotate(180)'/>
+        <use xlink:href='#fragment' transform='rotate(240)'/>
+        <use xlink:href='#fragment' transform='rotate(300)'/>
+      </g>
+    </symbol>
+
+    <symbol id='snoown' viewBox='-500 -500 1000 1000'>
+      <g id='base-snoown'>
+        <use xlink:href='#base-snow'/>
+        <use id='around-snow' xlink:href='#base-snow' transform='translate(0,382)'/>
+        <use xlink:href='#around-snow' transform='rotate(60)'/>
+        <use xlink:href='#around-snow' transform='rotate(120)'/>
+        <use xlink:href='#around-snow' transform='rotate(180)'/>
+        <use xlink:href='#around-snow' transform='rotate(240)'/>
+        <use xlink:href='#around-snow' transform='rotate(300)'/>
+      </g>
+    </symbol>
+  </defs>
+
+  <rect x='-809' y='-809' width='1618' height='1618' fill='#ffffff'/>
+  <use xlink:href='#base-snoown' stroke='#000000'/>
+</svg>

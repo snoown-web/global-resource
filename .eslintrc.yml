@@ -9,5 +9,8 @@ extends:
   - airbnb-base
   - airbnb-typescript/base
   - prettier
+rules:
+  no-console: off
+  '@typescript-eslint/no-loop-func': off
 ignorePatterns:
   - '*.js'

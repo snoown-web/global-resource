@@ -1,0 +1,14 @@
+name: Main
+
+on:
+  push:
+    branches: [main]
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  deploy-static:
+    uses: snoown-web/shared-resource/.github/workflows/deploy-static.yml@main
+    secrets: inherit

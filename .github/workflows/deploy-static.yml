@@ -1,0 +1,73 @@
+on:
+  workflow_call:
+    inputs:
+      project-root:
+        type: string
+    secrets:
+      STATIC_HOST:
+        required: true
+      STATIC_PORT:
+        required: true
+      STATIC_USER:
+        required: true
+      STATIC_KEY:
+        required: true
+      STATIC_ROOT:
+        required: true
+
+permissions: read-all
+
+jobs:
+  deploy-static:
+    runs-on: ubuntu-latest
+    timeout-minutes: 4
+    env:
+      project-root: ${{ secrets.STATIC_USER }}@${{ secrets.STATIC_HOST }}:${{ secrets.STATIC_ROOT }}${{ inputs.project-root }}
+    steps:
+      - uses: actions/checkout@v3
+
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 18
+          cache: npm
+
+      - run: npm ci
+
+      - name: Compile the TypeScript files
+        run: npx tsc
+
+      - name: Resolve and compress JavaScript files
+        run: npx importmap-resolver component/ --minify --ecma=2022
+
+      - name: Compile and compress the Sass files
+        run: npx sass style/ --style=compressed --no-source-map
+
+      - name: Prepare the private key file
+        run: |
+          touch private.key
+          chmod 600 $_
+          echo '${{ secrets.STATIC_KEY }}' > $_
+
+      - name: Transfer the component directory
+        run: rsync -cr
+          --include='*/' --include='*.js' --include='*.html' --exclude='*'
+          -e 'ssh -p ${{ secrets.STATIC_PORT }} -i private.key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+          component/ ${{ env.project-root }}component/
+
+      - name: Transfer the style directory
+        run: rsync -cr
+          --include='*/' --include='*.css' --exclude='*'
+          -e 'ssh -p ${{ secrets.STATIC_PORT }} -i private.key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+          style/ ${{ env.project-root }}style/
+
+      - name: Transfer the icon directory
+        run: rsync -cr
+          --include='*/' --include='*.svg' --include='*.png' --exclude='*'
+          -e 'ssh -p ${{ secrets.STATIC_PORT }} -i private.key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+          icon/ ${{ env.project-root }}icon/
+
+      - name: Transfer the page directory
+        run: rsync -cr
+          --include='*/' --include='*.html' --exclude='*'
+          -e 'ssh -p ${{ secrets.STATIC_PORT }} -i private.key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
+          page/ ${{ env.project-root }}

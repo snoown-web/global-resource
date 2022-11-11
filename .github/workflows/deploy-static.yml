@@ -31,16 +31,17 @@ jobs:
           node-version: 18
           cache: npm
 
-      - run: npm ci
+      - name: Install dependencies
+        run: if [ -f package-lock.json ]; then npm ci; fi
 
       - name: Compile the TypeScript files
-        run: npx tsc
+        run: if [[ -f package-lock.json && -d component ]]; then npx tsc; fi
 
       - name: Resolve and compress JavaScript files
-        run: npx importmap-resolver component/ --minify --ecma=2022
+        run: if [[ -f package-lock.json && -d component ]]; then npx importmap-resolver component/ --minify --ecma=2022; fi
 
       - name: Compile and compress the Sass files
-        run: npx sass style/ --style=compressed --no-source-map
+        run: if [[ -f package-lock.json && -d style ]]; then npx sass style/ --style=compressed --no-source-map; fi
 
       - name: Prepare the private key file
         run: |
@@ -49,25 +50,25 @@ jobs:
           echo '${{ secrets.STATIC_KEY }}' > $_
 
       - name: Transfer the component directory
-        run: rsync -cr
+        run: if [ -d component ]; then rsync -cr
           --include='*/' --include='*.js' --include='*.html' --exclude='*'
           -e 'ssh -p ${{ secrets.STATIC_PORT }} -i private.key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
-          component/ ${{ env.project-root }}component/
+          component/ ${{ env.project-root }}component/; fi
 
       - name: Transfer the style directory
-        run: rsync -cr
+        run: if [ -d style ]; then rsync -cr
           --include='*/' --include='*.css' --exclude='*'
           -e 'ssh -p ${{ secrets.STATIC_PORT }} -i private.key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
-          style/ ${{ env.project-root }}style/
+          style/ ${{ env.project-root }}style/; fi
 
       - name: Transfer the icon directory
-        run: rsync -cr
+        run: if [ -d icon ]; then rsync -cr
           --include='*/' --include='*.svg' --include='*.png' --exclude='*'
           -e 'ssh -p ${{ secrets.STATIC_PORT }} -i private.key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
-          icon/ ${{ env.project-root }}icon/
+          icon/ ${{ env.project-root }}icon/; fi
 
       - name: Transfer the page directory
-        run: rsync -cr
+        run: if [ -d page ]; then rsync -cr
           --include='*/' --include='*.html' --exclude='*'
           -e 'ssh -p ${{ secrets.STATIC_PORT }} -i private.key -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null'
-          page/ ${{ env.project-root }}
+          page/ ${{ env.project-root }}; fi
